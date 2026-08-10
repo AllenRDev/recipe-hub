@@ -40,7 +40,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
                     {recipe.title}
                 </h3>
                 <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                    By {recipe.author}
+                    By: {recipe.user.name}
                 </p>
                 <div className="mt-4 flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
                     <span>⭐ {recipe.rating}</span>
@@ -50,7 +50,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
 
             {recipe.id && (
                 <Link
-                    href={`/recipes/${recipe.id}`}
+                    href={route('recipes.show', recipe.id)}
                     className="margin-top-4 text-sm font-medium text-orange-500 hover:text-orange-600"
                 >
                     View Recipe →

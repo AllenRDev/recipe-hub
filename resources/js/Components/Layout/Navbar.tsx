@@ -47,7 +47,7 @@ export default function Navbar() {
                     {isAuthenticated ? (
                         <>
                             <Link
-                                href="/recipes/create"
+                                href={route('recipes.create')}
                                 className="rounded-lg px-4 py-2 text-gray-600 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-800"
                             >
                                 Create Recipe

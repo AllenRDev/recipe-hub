@@ -1,11 +1,44 @@
+import { useState } from 'react';
+import { Link } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import RecipeCard from '@/Components/Recipes/RecipeCard';
-import { recipes, categories } from '@/data/recipes';
-import { useState } from 'react';
 
-export default function Index() {
+interface Recipe {
+    id: number;
+    title: string;
+    description: string;
+    category: string;
+    image: string | null;
+    prep_time: number | null;
+    cook_time: number | null;
+    servings: number | null;
+    ingredients: {
+        amount: string;
+        name: string;
+    }[];
+    instructions: {
+        step: string;
+    }[];
+    user: {
+        id: number;
+        name: string;
+    };
+}
+
+interface Props {
+    recipes: Recipe[];
+}
+
+export default function Index({ recipes }: Props) {
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('All');
+
+    const categories = [
+    'All',
+    ...Array.from(
+        new Set(recipes.map((recipe) => recipe.category)),
+    ),
+];
 
     const filteredRecipes = recipes.filter((recipe) => {
         const matchesSearch = recipe.title

@@ -7,7 +7,7 @@ interface Props {
 
 export default function AuthenticatedLayout({ children }: Props) {
     return (
-        <div className="min-h-screen bg-stone-50">
+        <div className="min-h-screen bg-stone-50 dark:bg-slate-950">
             <Navbar />
 
             <main>{children}</main>
