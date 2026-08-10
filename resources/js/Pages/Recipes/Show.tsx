@@ -1,34 +1,7 @@
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link } from '@inertiajs/react';
 import useAuth from '@/hooks/useAuth';
-
-interface Ingredient {
-    amount: string;
-    name: string;
-}
-
-interface Instruction {
-    step: string;
-}
-
-interface User {
-    id: number;
-    name: string;
-}
-
-interface Recipe {
-    id: number;
-    title: string;
-    description: string;
-    category: string;
-    prep_time: number | null;
-    cook_time: number | null;
-    servings: number | null;
-    image: string | null;
-    ingredients: Ingredient[];
-    instructions: Instruction[];
-    user: User;
-}
+import { Recipe } from '../../types/recipe';
 
 interface Props {
     recipe: Recipe;

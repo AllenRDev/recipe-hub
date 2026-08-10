@@ -2,32 +2,12 @@ import { useState } from 'react';
 import { Link } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import RecipeCard from '@/Components/Recipes/RecipeCard';
-
-interface Recipe {
-    id: number;
-    title: string;
-    description: string;
-    category: string;
-    image: string | null;
-    prep_time: number | null;
-    cook_time: number | null;
-    servings: number | null;
-    ingredients: {
-        amount: string;
-        name: string;
-    }[];
-    instructions: {
-        step: string;
-    }[];
-    user: {
-        id: number;
-        name: string;
-    };
-}
+import { Recipe } from '../../types/recipe';
 
 interface Props {
     recipes: Recipe[];
 }
+
 
 export default function Index({ recipes }: Props) {
     const [search, setSearch] = useState('');

@@ -4,14 +4,21 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecipeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Models\Recipe;
 use Inertia\Inertia;
 
 Route::get('/', function () {
+    $featuredRecipes = Recipe::with('user')
+        ->withCount('comments')
+        ->withAvg('ratings', 'rating')
+        ->latest()
+        ->take(3)
+        ->get();
+
     return Inertia::render('Home', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+        'featuredRecipes' => $featuredRecipes,
     ]);
 });
 

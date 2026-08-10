@@ -1,22 +1,19 @@
 import { Link } from '@inertiajs/react';
+import { Recipe } from '../../types/recipe';
 
-interface Recipe {
-    id?: number;
-    title: string;
-    author: string;
-    rating: string;
-    category: string;
-    image?: string;
-    comments: string;
+interface Props {
+    recipes: Recipe[];
 }
+
 
 interface RecipeCardProps {
     recipe: Recipe;
 }
 
 export default function RecipeCard({ recipe }: RecipeCardProps) {
+    console.log(recipe);
     return (
-        <div className="group rounded-3xl border border-stone-200 bg-stone-50 p-5 shadow-md transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-2xl dark:border-slate-900 dark:bg-slate-950">
+        <div className="group rounded-3xl border border-stone-200 bg-stone-50 p-5 shadow-md transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-2xl dark:border-slate-800 dark:bg-slate-900">
             {/* Image */}
             <div className="overflow-hidden rounded-2xl">
                 {recipe.image ? (
@@ -44,7 +41,8 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
                 </p>
                 <div className="mt-4 flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
                     <span>⭐ {recipe.rating}</span>
-                    <span>💬 {recipe.comments}</span>
+                    <span>💬 {recipe.comments_count}{' '}
+        {recipe.comments_count === 1 ? 'comment' : 'comments'}</span>
                 </div>
             </div>
 

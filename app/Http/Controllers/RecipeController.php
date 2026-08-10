@@ -11,6 +11,8 @@ class RecipeController extends Controller
     public function index()
     {
         $recipes = Recipe::with('user')
+            ->withCount('comments')
+            ->withAvg('ratings', 'rating')
             ->latest()
             ->get();
 
@@ -63,13 +65,18 @@ class RecipeController extends Controller
 }
 
    public function show(Recipe $recipe)
-    {
-        $recipe->load('user');
+{
+    $recipe->load([
+        'user',
+        'comments.user',
+    ]);
 
-        return Inertia::render('Recipes/Show', [
-            'recipe' => $recipe,
-        ]);
-    }
+    $recipe->loadAvg('ratings', 'rating');
+
+    return Inertia::render('Recipes/Show', [
+        'recipe' => $recipe,
+    ]);
+}
     /**
      * Show the form for editing the specified resource.
      */
