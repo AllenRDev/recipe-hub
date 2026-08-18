@@ -22,8 +22,28 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/dashboard', function () {
+    $user = request()->user();
+
+    return Inertia::render('Dashboard', [
+        'user' => $user,
+        'recipes' => $user->recipes()
+            ->latest()
+            ->get(),
+    ]);
+})->middleware(['auth', 'verified'])->name('dashboard');
+
 Route::get('/home', function () {
-    return Inertia::render('Home');
+    $featuredRecipes = Recipe::with('user')
+        ->withCount('comments')
+        ->withAvg('ratings', 'rating')
+        ->latest()
+        ->take(3)
+        ->get();
+
+    return Inertia::render('Home', [
+        'featuredRecipes' => $featuredRecipes,
+    ]);
 })->middleware(['auth', 'verified'])->name('home');
 
 Route::get('/recipes', [
