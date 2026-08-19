@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { Recipe } from '../../types/recipe';
+import { Recipe } from '@/types/recipes';
 
 interface Props {
     recipes: Recipe[];
