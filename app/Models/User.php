@@ -16,6 +16,7 @@ use App\Models\Recipe;
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
+    protected $appends = ['profile_url'];
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
@@ -35,5 +36,12 @@ class User extends Authenticatable
     public function recipes(): HasMany
     {
     return $this->hasMany(Recipe::class);
+    }
+
+    public function getProfileUrlAttribute(): ?string
+    {
+        return $this->profile_image
+            ? asset('storage/' . $this->profile_image) 
+            : null;
     }
 }

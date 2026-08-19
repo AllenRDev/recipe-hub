@@ -10,6 +10,7 @@ interface Props {
         email: string;
         bio: string | null;
         profile_image: string | null;
+        profile_url: string | null;
     };
     recipes: Recipe[];
 }
@@ -36,7 +37,7 @@ export default function Dashboard({ user, recipes }: Props) {
             <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-full bg-orange-100 text-3xl font-bold text-orange-600 dark:bg-orange-500/10 dark:text-orange-400">
                 {user.profile_image ? (
                     <img
-                        src={user.profile_image}
+                        src={user.profile_url}
                         alt={user.name}
                         className="h-full w-full object-cover"
                     />

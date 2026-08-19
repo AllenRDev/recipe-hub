@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,15 +30,31 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+       $user = $request->user();
+    
+    // Fill standard fields
+    $user->fill($request->safe()->except('profile_image'));
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+    if ($request->user()->isDirty('email')) {
+        $request->user()->email_verified_at = null;
+    }
+
+    // Handle Image Upload
+    if ($request->hasFile('profile_image')) {
+        if ($user->profile_image) {
+            Storage::disk('public')->delete($user->profile_image);
         }
 
-        $request->user()->save();
+        // Store new photo
+        $path = $request->file('profile_image')->store('profile_photos', 'public');
+        
+        // Save the path to the DB
+        $user->profile_image = $path;
+    }
 
-        return Redirect::route('profile.edit');
+    $user->save();
+
+    return Redirect::route('profile.edit');
     }
 
     /**
