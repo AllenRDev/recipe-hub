@@ -1,7 +1,7 @@
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link } from '@inertiajs/react';
 import useAuth from '@/hooks/useAuth';
-import { Recipe } from '../../types/recipe';
+import { Recipe } from '@/types/recipes';
 
 interface Props {
     recipe: Recipe;

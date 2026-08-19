@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import RecipeCard from '@/Components/Recipes/RecipeCard';
-import { Recipe } from '../../types/recipe';
+import { Recipe } from '@/types/recipes';
 
 interface Props {
     recipes: Recipe[];

@@ -2,7 +2,7 @@ import GuestLayout from '@/Layouts/GuestLayout';
 import Hero from '@/Components/Landing/Hero';
 import FeaturedRecipes from '@/Components/Landing/FeaturedRecipes';
 import HowItWorks from '@/Components/Landing/HowItWorks';
-import { Recipe } from '@/types/recipe';
+import { Recipe } from '@/types/recipes';
 
 interface Props {
     featuredRecipes: Recipe[];
