@@ -40,7 +40,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
                     By: {recipe.user.name}
                 </p>
                 <div className="mt-4 flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
-                    <span>⭐ {recipe.rating}</span>
+                    <span>⭐ {recipe.ratings_avg_rating}</span>
                     <span>💬 {recipe.comments_count}{' '}
         {recipe.comments_count === 1 ? 'comment' : 'comments'}</span>
                 </div>
