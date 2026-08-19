@@ -10,7 +10,7 @@ interface Props {
         email: string;
         bio: string | null;
         profile_image: string | null;
-        profile_url: string | null;
+        profile_url: string | undefined;
     };
     recipes: Recipe[];
 }
