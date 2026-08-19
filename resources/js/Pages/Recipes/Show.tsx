@@ -99,7 +99,7 @@ export default function Show({ recipe }: Props) {
                             </h2>
 
                             <ul className="mt-5 space-y-3 text-slate-600 dark:text-slate-300">
-                                {recipe.ingredients.map((item, index) => (
+                                {recipe.ingredients.map((item: { amount: string; name: string }, index: number) => (
                                     <li
                                         key={index}
                                         className="flex gap-2"
@@ -124,7 +124,7 @@ export default function Show({ recipe }: Props) {
 
                             <ol className="mt-5 space-y-5 text-slate-600 dark:text-slate-300">
                                 {recipe.instructions.map(
-                                    (instruction, index) => (
+                                    (instruction: { step: string }, index: number) => (
                                         <li
                                             key={index}
                                             className="flex gap-4"

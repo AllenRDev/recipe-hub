@@ -1,6 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
-import { Recipe } from '@/types/recipe';
+import { Recipe } from '@/types/recipes';
+import { User } from '@/types'; 
 
 interface Props {
     user: {
@@ -11,10 +12,6 @@ interface Props {
         profile_image: string | null;
     };
     recipes: Recipe[];
-}
-
-interface Props {
-    user: User;
 }
 
 export default function Dashboard({ user, recipes }: Props) {
