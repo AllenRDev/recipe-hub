@@ -64,17 +64,31 @@ class RecipeController extends Controller
         ->with('success', 'Recipe created successfully!');
 }
 
-   public function show(Recipe $recipe)
+public function show(Recipe $recipe)
 {
     $recipe->load([
         'user',
         'comments.user',
     ]);
 
+    $recipe->loadCount([
+        'ratings',
+        'comments',
+    ]);
+
     $recipe->loadAvg('ratings', 'rating');
+
+    $userRating = null;
+
+    if (auth()->check()) {
+        $userRating = $recipe->ratings()
+            ->where('user_id', auth()->id())
+            ->value('rating');
+    }
 
     return Inertia::render('Recipes/Show', [
         'recipe' => $recipe,
+        'userRating' => $userRating,
     ]);
 }
     /**

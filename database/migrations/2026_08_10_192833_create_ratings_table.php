@@ -14,11 +14,11 @@ return new class extends Migration
        Schema::create('ratings', function (Blueprint $table) {
     $table->id();
 
-    $table->foreignId('recipe_id')
+    $table->foreignId('user_id')
         ->constrained()
         ->cascadeOnDelete();
 
-    $table->foreignId('user_id')
+    $table->foreignId('recipe_id')
         ->constrained()
         ->cascadeOnDelete();
 
@@ -26,7 +26,7 @@ return new class extends Migration
 
     $table->timestamps();
 
-    $table->unique(['recipe_id', 'user_id']);
+    $table->unique(['user_id', 'recipe_id']);
 });
     }
 

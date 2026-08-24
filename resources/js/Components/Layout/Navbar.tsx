@@ -1,9 +1,14 @@
 import { Link, usePage } from '@inertiajs/react';
 import ThemeToggle from './ThemeToggle';
 import useAuth from '@/hooks/useAuth';
+import { router } from '@inertiajs/react';
 
 export default function Navbar() {
     const { user, isAuthenticated } = useAuth();
+
+    const logout = () => {
+    router.post(route('logout'));
+};
 
     return (
         <header className="sticky top-0 z-50 border-b border-gray-200 bg-white backdrop-blur-md dark:border-slate-700 dark:bg-slate-900">
@@ -59,6 +64,12 @@ export default function Navbar() {
                             >
                                 Dashboard
                             </Link>
+                            <button
+                                onClick={logout}
+                                className="rounded-lg px-4 py-2 text-gray-600 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-800"
+                            >
+                                Log out
+                            </button>
                         </>
                     ) : (
                         <>

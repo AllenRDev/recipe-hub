@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\RatingController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Models\Recipe;
@@ -61,6 +63,20 @@ Route::middleware('auth')->group(function () {
         RecipeController::class,
         'store',
     ])->name('recipes.store');
+
+    Route::post('/recipes/{recipe}/rating', [
+    RatingController::class,
+    'store',
+    ])->name('recipes.rating.store');
+
+    Route::post('/recipes/{recipe}/comments', [
+    CommentController::class,
+    'store',
+    ])->name('recipes.comments.store');
+
+
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])
+        ->name('comments.destroy');
 });
 
 Route::get('/recipes/{recipe}', [

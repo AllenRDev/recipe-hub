@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\User;
 
@@ -42,6 +43,16 @@ class Recipe extends Model
     public function ratings()
 {
     return $this->hasMany(Rating::class);
+}
+
+public function averageRating(): float
+{
+    return round($this->ratings()->avg('rating') ?? 0, 1);
+}
+
+public function ratingCount(): int
+{
+    return $this->ratings()->count();
 }
 
 }
