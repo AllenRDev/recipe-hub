@@ -3,24 +3,21 @@ import { Link } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import RecipeCard from '@/Components/Recipes/RecipeCard';
 import { Recipe } from '@/types/recipes';
+import { RECIPE_CATEGORIES } from '@/constants/recipeCategories';
 
 interface Props {
     recipes: Recipe[];
 }
 
-
 export default function Index({ recipes }: Props) {
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('All');
+    const [sort, setSort] = useState('newest');
 
-    const categories = [
-    'All',
-    ...Array.from(
-        new Set(recipes.map((recipe) => recipe.category)),
-    ),
-];
+    const categories = ['All', ...RECIPE_CATEGORIES];
 
-    const filteredRecipes = recipes.filter((recipe) => {
+    const filteredRecipes = recipes
+    .filter((recipe) => {
         const matchesSearch = recipe.title
             .toLowerCase()
             .includes(search.toLowerCase());
@@ -29,6 +26,22 @@ export default function Index({ recipes }: Props) {
             category === 'All' || recipe.category === category;
 
         return matchesSearch && matchesCategory;
+    })
+    .sort((a, b) => {
+        switch (sort) {
+            case 'oldest':
+                return a.id - b.id;
+
+            case 'az':
+                return a.title.localeCompare(b.title);
+
+            case 'za':
+                return b.title.localeCompare(a.title);
+
+            case 'newest':
+            default:
+                return b.id - a.id;
+        }
     });
 
     return (
@@ -46,13 +59,26 @@ export default function Index({ recipes }: Props) {
                     </div>
 
                     <div className="mt-8 flex gap-4">
-                        <input
-                            placeholder="Search recipes..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className="w-full rounded-xl border bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                        />
-                    </div>
+    <input
+        placeholder="Search recipes..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="w-full rounded-xl border bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+    />
+
+    <select
+        value={sort}
+        onChange={(e) => setSort(e.target.value)}
+        className="rounded-xl border bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+    >
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+        <option value="az">A–Z</option>
+        <option value="za">Z–A</option>
+    </select>
+</div>
+
+                    
 
                     <div className="mt-5 flex flex-wrap gap-3">
                         {categories.map((item) => (

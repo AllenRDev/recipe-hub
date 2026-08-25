@@ -7,8 +7,8 @@ export default function Navbar() {
     const { user, isAuthenticated } = useAuth();
 
     const logout = () => {
-    router.post(route('logout'));
-};
+        router.post(route('logout'));
+    };
 
     return (
         <header className="sticky top-0 z-50 border-b border-gray-200 bg-white backdrop-blur-md dark:border-slate-700 dark:bg-slate-900">

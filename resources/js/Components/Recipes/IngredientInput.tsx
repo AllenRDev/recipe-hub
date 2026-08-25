@@ -39,23 +39,7 @@ export default function IngredientInput({
                 type="button"
                 onClick={onRemove}
                 disabled={!canRemove}
-                className="
-                    rounded-xl
-                    border
-                    border-stone-200
-                    px-4
-                    py-2
-                    text-sm
-                    font-medium
-                    text-red-600
-                    transition
-                    hover:bg-red-50
-                    disabled:cursor-not-allowed
-                    disabled:opacity-40
-                    dark:border-slate-600
-                    dark:text-red-400
-                    dark:hover:bg-red-500/10
-                "
+                className="rounded-xl border border-stone-200 px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-600 dark:text-red-400 dark:hover:bg-red-500/10"
             >
                 Remove
             </button>

@@ -95,23 +95,63 @@ public function show(Recipe $recipe)
      * Show the form for editing the specified resource.
      */
     public function edit(Recipe $recipe)
-    {
-        //
-    }
+{
+    abort_unless($recipe->user_id === auth()->id(), 403);
+
+    return Inertia::render('Recipes/Edit', [
+        'recipe' => $recipe,
+    ]);
+}
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Recipe $recipe)
-    {
-        //
+   public function update(Request $request, Recipe $recipe)
+{
+    abort_unless($recipe->user_id === auth()->id(), 403);
+
+    $validated = $request->validate([
+        'title' => ['required', 'string', 'max:255'],
+        'description' => ['required', 'string'],
+        'category' => ['required', 'string', 'max:100'],
+
+        'prep_time' => ['nullable', 'integer', 'min:0'],
+        'cook_time' => ['nullable', 'integer', 'min:0'],
+        'servings' => ['nullable', 'integer', 'min:1'],
+
+        'image' => ['nullable', 'image', 'max:5120'],
+
+        'ingredients' => ['required', 'array', 'min:1'],
+        'ingredients.*.amount' => ['required', 'string', 'max:100'],
+        'ingredients.*.name' => ['required', 'string', 'max:255'],
+
+        'instructions' => ['required', 'array', 'min:1'],
+        'instructions.*.step' => ['required', 'string'],
+    ]);
+
+    if ($request->hasFile('image')) {
+        $validated['image'] = $request
+            ->file('image')
+            ->store('recipes', 'public');
     }
 
+    $recipe->update($validated);
+
+    return redirect()
+        ->route('recipes.show', $recipe)
+        ->with('success', 'Recipe updated successfully!');
+}
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Recipe $recipe)
-    {
-        //
-    }
+   public function destroy(Recipe $recipe)
+{
+    abort_unless($recipe->user_id === auth()->id(), 403);
+
+    $recipe->delete();
+
+    return redirect()
+        ->route('recipes.index')
+        ->with('success', 'Recipe deleted successfully!');
+}
 }

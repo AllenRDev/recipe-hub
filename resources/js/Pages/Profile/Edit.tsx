@@ -14,8 +14,8 @@ export default function Edit({
             <Head title="Profile" />
 
             <div className="py-12">
-                <div className="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8 ">
-                    <div className="bg-stone-50 dark:bg-slate-900 border border-stone-200 dark:border-slate-800 p-4 shadow sm:rounded-lg sm:p-8">
+                <div className="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
+                    <div className="border border-stone-200 bg-stone-50 p-4 shadow sm:rounded-lg sm:p-8 dark:border-slate-800 dark:bg-slate-900">
                         <UpdateProfileInformationForm
                             mustVerifyEmail={mustVerifyEmail}
                             status={status}
@@ -23,11 +23,11 @@ export default function Edit({
                         />
                     </div>
 
-                    <div className="bg-stone-50 dark:bg-slate-900 border border-stone-200 dark:border-slate-800 p-4 shadow sm:rounded-lg sm:p-8">
+                    <div className="border border-stone-200 bg-stone-50 p-4 shadow sm:rounded-lg sm:p-8 dark:border-slate-800 dark:bg-slate-900">
                         <UpdatePasswordForm className="max-w-xl" />
                     </div>
 
-                    <div className="bg-stone-50 dark:bg-slate-900 border border-stone-200 dark:border-slate-800 p-4 shadow sm:rounded-lg sm:p-8">
+                    <div className="border border-stone-200 bg-stone-50 p-4 shadow sm:rounded-lg sm:p-8 dark:border-slate-800 dark:bg-slate-900">
                         <DeleteUserForm className="max-w-xl" />
                     </div>
                 </div>

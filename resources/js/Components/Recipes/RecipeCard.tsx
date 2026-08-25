@@ -5,7 +5,6 @@ interface Props {
     recipes: Recipe[];
 }
 
-
 interface RecipeCardProps {
     recipe: Recipe;
 }
@@ -18,7 +17,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
             <div className="overflow-hidden rounded-2xl">
                 {recipe.image ? (
                     <img
-                        src={recipe.image}
+                        src={`/storage/${recipe.image}`}
                         alt={recipe.title}
                         className="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
@@ -41,8 +40,10 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
                 </p>
                 <div className="mt-4 flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
                     <span>⭐ {recipe.ratings_avg_rating}</span>
-                    <span>💬 {recipe.comments_count}{' '}
-        {recipe.comments_count === 1 ? 'comment' : 'comments'}</span>
+                    <span>
+                        💬 {recipe.comments_count}{' '}
+                        {recipe.comments_count === 1 ? 'comment' : 'comments'}
+                    </span>
                 </div>
             </div>
 

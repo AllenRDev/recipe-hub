@@ -19,24 +19,34 @@ export default function UpdateProfileInformationForm({
     const user = usePage<PageProps>().props.auth.user;
 
     // Local state for image preview before upload
-    const [previewUrl, setPreviewUrl] = useState<string | null>(user.profile_url ?? null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(
+        user.profile_url ?? null
+    );
 
-    const { data, setData, patch, post, errors, processing, recentlySuccessful, progress } =
-        useForm({
-        _method: 'patch', 
+    const {
+        data,
+        setData,
+        patch,
+        post,
+        errors,
+        processing,
+        recentlySuccessful,
+        progress,
+    } = useForm({
+        _method: 'patch',
         name: user.name,
         email: user.email,
         bio: user.bio ?? '',
         profile_image: null as File | null,
-        });
-
-const submit: FormEventHandler = (e) => {
-    e.preventDefault();
-
-    post(route('profile.update'), {
-        preserveScroll: true,
     });
-};
+
+    const submit: FormEventHandler = (e) => {
+        e.preventDefault();
+
+        post(route('profile.update'), {
+            preserveScroll: true,
+        });
+    };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -62,20 +72,29 @@ const submit: FormEventHandler = (e) => {
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 {/* Styled Profile Photo Upload Zone */}
-                <div className="flex items-start gap-6 bg-stone-100 dark:bg-slate-800/50 p-6 rounded-xl border-2 border-dashed border-stone-200 dark:border-slate-700">
-                    
+                <div className="flex items-start gap-6 rounded-xl border-2 border-dashed border-stone-200 bg-stone-100 p-6 dark:border-slate-700 dark:bg-slate-800/50">
                     {/* Preview Circle */}
                     <div className="shrink-0">
                         {previewUrl ? (
-                            <img 
-                                src={previewUrl} 
-                                alt={user.name} 
-                                className="h-20 w-20 rounded-full object-cover border-2 border-stone-300 dark:border-slate-600 shadow-inner"
+                            <img
+                                src={previewUrl}
+                                alt={user.name}
+                                className="h-20 w-20 rounded-full border-2 border-stone-300 object-cover shadow-inner dark:border-slate-600"
                             />
                         ) : (
-                            <div className="h-20 w-20 rounded-full bg-stone-200 dark:bg-slate-700 flex items-center justify-center border-2 border-stone-300 dark:border-slate-600">
-                                <svg className="h-10 w-10 text-stone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-stone-300 bg-stone-200 dark:border-slate-600 dark:bg-slate-700">
+                                <svg
+                                    className="h-10 w-10 text-stone-400"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={1.5}
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                    />
                                 </svg>
                             </div>
                         )}
@@ -83,13 +102,17 @@ const submit: FormEventHandler = (e) => {
 
                     {/* Upload Controls */}
                     <div className="flex-1 space-y-2">
-                        <InputLabel htmlFor="profile" value="Profile Photo" className="mb-0" />
-                        
+                        <InputLabel
+                            htmlFor="profile"
+                            value="Profile Photo"
+                            className="mb-0"
+                        />
+
                         <p className="text-xs text-stone-600 dark:text-gray-400">
                             JPG, PNG, WEBP. Max 2MB.
                         </p>
 
-                        <div className="flex items-center gap-3 mt-2">
+                        <div className="mt-2 flex items-center gap-3">
                             {/* Hidden actual file input */}
                             <input
                                 id="profile"
@@ -100,28 +123,45 @@ const submit: FormEventHandler = (e) => {
                             />
 
                             {/* Styled 'Choose File' Button */}
-                            <label 
-                                htmlFor="profile" 
-                                className="inline-flex cursor-pointer items-center rounded-lg bg-white dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-slate-600 hover:bg-gray-50 dark:hover:bg-slate-600"
+                            <label
+                                htmlFor="profile"
+                                className="inline-flex cursor-pointer items-center rounded-lg bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-gray-300 ring-inset hover:bg-gray-50 dark:bg-slate-700 dark:text-gray-100 dark:ring-slate-600 dark:hover:bg-slate-600"
                             >
-                                <svg className="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                <svg
+                                    className="mr-2 -ml-1 h-5 w-5 text-gray-500"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                                    />
                                 </svg>
                                 Change Photo
                             </label>
 
                             {data.profile_image && (
-                                <p className="text-xs text-stone-500 truncate max-w-[150px]">
+                                <p className="max-w-[150px] truncate text-xs text-stone-500">
                                     {data.profile_image.name}
                                 </p>
                             )}
                         </div>
 
-                        <InputError className="mt-2" message={errors.profile_image} />
-                        
+                        <InputError
+                            className="mt-2"
+                            message={errors.profile_image}
+                        />
+
                         {/* Optional Upload Progress Bar */}
                         {progress && (
-                            <progress value={progress.percentage} max="100" className="mt-2 w-full h-1 rounded overflow-hidden [&::-webkit-progress-bar]:bg-gray-200 [&::-webkit-progress-value]:bg-indigo-600 [&::-moz-progress-bar]:bg-indigo-600">
+                            <progress
+                                value={progress.percentage}
+                                max="100"
+                                className="mt-2 h-1 w-full overflow-hidden rounded [&::-moz-progress-bar]:bg-indigo-600 [&::-webkit-progress-bar]:bg-gray-200 [&::-webkit-progress-value]:bg-indigo-600"
+                            >
                                 {progress.percentage}%
                             </progress>
                         )}
@@ -181,7 +221,7 @@ const submit: FormEventHandler = (e) => {
                                 href={route('verification.send')}
                                 method="post"
                                 as="button"
-                                className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
+                                className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                             >
                                 Click here to re-send the verification email.
                             </Link>
@@ -197,7 +237,9 @@ const submit: FormEventHandler = (e) => {
                 )}
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save Changes</PrimaryButton>
+                    <PrimaryButton disabled={processing}>
+                        Save Changes
+                    </PrimaryButton>
 
                     <Transition
                         show={recentlySuccessful}

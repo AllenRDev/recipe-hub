@@ -25,27 +25,7 @@ export default function InstructionInput({
                     onChange={(e) => onChange(e.target.value)}
                     rows={3}
                     placeholder={`Describe step ${step}...`}
-                    className="
-                        block
-                        w-full
-                        rounded-xl
-                        border
-                        border-stone-300
-                        bg-stone-50
-                        px-4
-                        py-3
-                        text-slate-900
-                        shadow-sm
-                        outline-none
-                        transition
-                        placeholder:text-slate-400
-                        focus:border-orange-500
-                        focus:ring-orange-500
-                        dark:border-slate-600
-                        dark:bg-slate-900
-                        dark:text-white
-                        dark:placeholder:text-slate-500
-                    "
+                    className="block w-full rounded-xl border border-stone-300 bg-stone-50 px-4 py-3 text-slate-900 shadow-sm transition outline-none placeholder:text-slate-400 focus:border-orange-500 focus:ring-orange-500 dark:border-slate-600 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500"
                 />
             </div>
 
@@ -53,16 +33,7 @@ export default function InstructionInput({
                 <button
                     type="button"
                     onClick={onRemove}
-                    className="
-                        mt-2
-                        text-sm
-                        font-medium
-                        text-red-500
-                        transition
-                        hover:text-red-700
-                        dark:text-red-400
-                        dark:hover:text-red-300
-                    "
+                    className="mt-2 text-sm font-medium text-red-500 transition hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
                 >
                     Remove
                 </button>

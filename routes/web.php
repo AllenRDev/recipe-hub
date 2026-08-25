@@ -54,6 +54,8 @@ Route::get('/recipes', [
 ])->name('recipes.index');
 
 Route::middleware('auth')->group(function () {
+    Route::resource('recipes', RecipeController::class);
+    
     Route::get('/recipes/create', [
         RecipeController::class,
         'create',
