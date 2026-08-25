@@ -95,6 +95,16 @@ export default function Show({ recipe, userRating }: Props) {
                                 {recipe.title}
                             </h1>
 
+                            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+    By{': '}
+    <Link
+        href={route('users.show', recipe.user.id)}
+        className="font-medium text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300"
+    >
+        {recipe.user.name}
+    </Link>
+</p>
+
                             {user && user.id === recipe.user.id && (
                                 <div className="mt-5 flex gap-3">
                                     <Link

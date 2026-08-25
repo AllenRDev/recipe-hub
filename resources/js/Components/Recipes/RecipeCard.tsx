@@ -35,9 +35,12 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
                 <h3 className="mt-2 text-xl font-bold text-slate-900 dark:text-white">
                     {recipe.title}
                 </h3>
-                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                    By: {recipe.user.name}
-                </p>
+                <Link
+    href={route('users.show', recipe.user.id)}
+    className="font-medium text-slate-700 hover:text-orange-500 dark:text-slate-300 dark:hover:text-orange-400"
+>
+    {recipe.user.name}
+</Link>
                 <div className="mt-4 flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
                     <span>⭐ {recipe.ratings_avg_rating}</span>
                     <span>

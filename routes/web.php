@@ -55,7 +55,7 @@ Route::get('/recipes', [
 
 Route::middleware('auth')->group(function () {
     Route::resource('recipes', RecipeController::class);
-    
+
     Route::get('/recipes/create', [
         RecipeController::class,
         'create',
@@ -85,6 +85,9 @@ Route::get('/recipes/{recipe}', [
     RecipeController::class,
     'show',
 ])->name('recipes.show');
+
+Route::get('/users/{user}', [ProfileController::class, 'show'])
+    ->name('users.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
