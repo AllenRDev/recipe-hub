@@ -4,6 +4,8 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\RatingController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\FavoritesController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Models\Recipe;
@@ -79,6 +81,15 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])
         ->name('comments.destroy');
+
+    Route::post('/recipes/{recipe}/favorite', [FavoriteController::class, 'store'])
+        ->name('recipes.favorite');
+
+    Route::delete('/recipes/{recipe}/favorite', [FavoriteController::class, 'destroy'])
+        ->name('recipes.unfavorite');
+
+    Route::get('/favorites', [FavoritesController::class, 'index'])
+        ->name('favorites.index');
 });
 
 Route::get('/recipes/{recipe}', [

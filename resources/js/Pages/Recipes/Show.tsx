@@ -7,9 +7,10 @@ import { Recipe } from '@/types/recipes';
 interface Props {
     recipe: Recipe;
     userRating: number | null;
+    isFavorited: boolean;
 }
 
-export default function Show({ recipe, userRating }: Props) {
+export default function Show({ recipe, userRating, isFavorited }: Props) {
     const { user, isAuthenticated } = useAuth();
 
     const [rating, setRating] = useState(userRating ?? 0);
@@ -104,6 +105,27 @@ export default function Show({ recipe, userRating }: Props) {
         {recipe.user.name}
     </Link>
 </p>
+{isFavorited ? (
+    <button
+        type="button"
+        onClick={() =>
+            router.delete(route('recipes.unfavorite', recipe.id))
+        }
+        className="rounded-xl mt-4 border border-orange-500 px-4 py-2 font-medium text-orange-500 transition hover:bg-orange-50 dark:hover:bg-orange-950"
+    >
+        ♥ Saved
+    </button>
+) : (
+    <button
+        type="button"
+        onClick={() =>
+            router.post(route('recipes.favorite', recipe.id))
+        }
+        className="rounded-xl bg-orange-500 mt-4 px-4 py-2 font-medium text-white transition hover:bg-orange-600"
+    >
+        ♡ Save
+    </button>
+)}
 
                             {user && user.id === recipe.user.id && (
                                 <div className="mt-5 flex gap-3">
@@ -130,7 +152,7 @@ export default function Show({ recipe, userRating }: Props) {
                                                 );
                                             }
                                         }}
-                                        className="rounded-lg border border-red-200 px-4 py-2 text-sm font-medium text-red-500 transition hover:bg-red-50 dark:border-red-900/50 dark:hover:bg-red-950/30"
+                                        className="rounded-lg border border-red-200 px-4 py-2 text-sm font-medium text-red-500 transition hover:bg-red-50 dark:border-red-500/50 dark:hover:bg-red-950/30"
                                     >
                                         Delete Recipe
                                     </button>

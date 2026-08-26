@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import RecipeCard from '@/Components/Recipes/RecipeCard';
@@ -13,6 +13,9 @@ export default function Index({ recipes }: Props) {
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('All');
     const [sort, setSort] = useState('newest');
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const recipesPerPage = 6;
 
     const categories = ['All', ...RECIPE_CATEGORIES];
 
@@ -44,6 +47,13 @@ export default function Index({ recipes }: Props) {
         }
     });
 
+    const totalPages = Math.ceil(filteredRecipes.length / recipesPerPage);
+
+const paginatedRecipes = filteredRecipes.slice(
+    (currentPage - 1) * recipesPerPage,
+    currentPage * recipesPerPage,
+);
+
     return (
         <GuestLayout>
             <section className="bg-stone-50 py-16 dark:bg-slate-950">
@@ -62,13 +72,19 @@ export default function Index({ recipes }: Props) {
     <input
         placeholder="Search recipes..."
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) => {
+    setSearch(e.target.value);
+    setCurrentPage(1);
+}}
         className="w-full rounded-xl border bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
     />
 
     <select
         value={sort}
-        onChange={(e) => setSort(e.target.value)}
+        onChange={(e) => {
+    setSort(e.target.value);
+    setCurrentPage(1);
+}}
         className="rounded-xl border bg-white px-4 py-3 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
     >
         <option value="newest">Newest</option>
@@ -84,7 +100,10 @@ export default function Index({ recipes }: Props) {
                         {categories.map((item) => (
                             <button
                                 key={item}
-                                onClick={() => setCategory(item)}
+                                onClick={() => {
+    setCategory(item);
+    setCurrentPage(1);
+}}
                                 className={`rounded-full px-4 py-2 text-sm ${
                                     category === item
                                         ? 'bg-orange-500 text-white hover:bg-orange-600'
@@ -97,12 +116,37 @@ export default function Index({ recipes }: Props) {
                     </div>
 
                     <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                        {filteredRecipes.map((recipe) => (
+                        {paginatedRecipes.map((recipe) => (
                             <RecipeCard key={recipe.id} recipe={recipe} />
                         ))}
                     </div>
                 </div>
             </section>
+            {totalPages > 1 && (
+    <div className="mt-10 flex items-center justify-center gap-2">
+        <button
+            type="button"
+            onClick={() => setCurrentPage((page) => page - 1)}
+            disabled={currentPage === 1}
+            className="rounded-lg border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+        >
+            Previous
+        </button>
+
+        <span className="px-4 text-sm text-slate-600 dark:text-slate-300">
+            Page {currentPage} of {totalPages}
+        </span>
+
+        <button
+            type="button"
+            onClick={() => setCurrentPage((page) => page + 1)}
+            disabled={currentPage === totalPages}
+            className="rounded-lg border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+        >
+            Next
+        </button>
+    </div>
+)}
         </GuestLayout>
     );
 }

@@ -79,16 +79,23 @@ public function show(Recipe $recipe)
     $recipe->loadAvg('ratings', 'rating');
 
     $userRating = null;
+    $isFavorited = false;
 
     if (auth()->check()) {
         $userRating = $recipe->ratings()
             ->where('user_id', auth()->id())
             ->value('rating');
+
+        $isFavorited = auth()->user()
+        ->favoriteRecipes()
+        ->where('recipe_id', $recipe->id)
+        ->exists();
     }
 
     return Inertia::render('Recipes/Show', [
         'recipe' => $recipe,
         'userRating' => $userRating,
+        'isFavorited' => $isFavorited,
     ]);
 }
     /**

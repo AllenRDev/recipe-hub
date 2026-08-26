@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\User;
 
 
@@ -53,6 +54,11 @@ public function averageRating(): float
 public function ratingCount(): int
 {
     return $this->ratings()->count();
+}
+
+public function favoritedBy(): BelongsToMany
+{
+    return $this->belongsToMany(User::class);
 }
 
 }

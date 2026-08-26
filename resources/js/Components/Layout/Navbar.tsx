@@ -32,11 +32,9 @@ export default function Navbar() {
                     >
                         Browse
                     </Link>
-                    <Link
-                        href="/categories"
-                        className="text-gray-600 hover:text-orange-500 dark:text-gray-300"
-                    >
-                        Categories
+                    <Link href={route('favorites.index')}
+                        className="text-gray-600 hover:text-orange-500 dark:text-gray-300">
+                        Favorites
                     </Link>
                     <Link
                         href="/about"
