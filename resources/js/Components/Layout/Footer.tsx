@@ -41,19 +41,19 @@ export default function Footer() {
 
                         <li>
                             <Link
-                                href="/categories"
+                                href="/favorites"
                                 className="hover:text-orange-500"
                             >
-                                Categories
+                                Favorites
                             </Link>
                         </li>
 
                         <li>
                             <Link
-                                href="/favorites"
+                                href="/about"
                                 className="hover:text-orange-500"
                             >
-                                Favorites
+                                About
                             </Link>
                         </li>
                     </ul>
