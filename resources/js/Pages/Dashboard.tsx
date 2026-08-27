@@ -1,7 +1,8 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
-import { Recipe } from '@/types/recipes';
-import { User } from '@/types';
+import RecipeCard from '@/Components/Recipes/RecipeCard';
+import Pagination from '@/Components/Pagination';
+import { PaginatedRecipes } from '@/types/recipes';
 
 interface Props {
     user: {
@@ -12,7 +13,7 @@ interface Props {
         profile_image: string | null;
         profile_url: string | undefined;
     };
-    recipes: Recipe[];
+    recipes: PaginatedRecipes;
 }
 
 export default function Dashboard({ user, recipes }: Props) {
@@ -70,6 +71,64 @@ export default function Dashboard({ user, recipes }: Props) {
                                 Edit Profile
                             </Link>
                         </div>
+                    </section>
+                    <section className="mt-10">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                                    Your Recipes
+                                </h2>
+
+                                <p className="mt-1 text-slate-600 dark:text-slate-300">
+                                    Recipes you've shared with the community.
+                                </p>
+                            </div>
+
+                            <Link
+                                href={route('recipes.create')}
+                                className="rounded-xl bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600"
+                            >
+                                Create Recipe
+                            </Link>
+                        </div>
+
+                        {recipes.data.length > 0 ? (
+                            <>
+                                <div className="mt-6 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                                    {recipes.data.map((recipe) => (
+                                        <RecipeCard
+                                            key={recipe.id}
+                                            recipe={recipe}
+                                        />
+                                    ))}
+                                </div>
+
+                                <Pagination
+                                    currentPage={recipes.current_page}
+                                    lastPage={recipes.last_page}
+                                    prevUrl={recipes.prev_page_url}
+                                    nextUrl={recipes.next_page_url}
+                                />
+                            </>
+                        ) : (
+                            <div className="mt-6 rounded-2xl border border-stone-200 bg-white p-10 text-center dark:border-slate-700 dark:bg-slate-800">
+                                <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
+                                    You haven't posted any recipes yet.
+                                </h3>
+
+                                <p className="mt-2 text-slate-600 dark:text-slate-300">
+                                    Share your first recipe with the RecipeHub
+                                    community.
+                                </p>
+
+                                <Link
+                                    href={route('recipes.create')}
+                                    className="mt-5 inline-flex rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white transition hover:bg-orange-600"
+                                >
+                                    Create Your First Recipe
+                                </Link>
+                            </div>
+                        )}
                     </section>
                 </div>
             </main>

@@ -6,13 +6,19 @@ import {
     useRef,
 } from 'react';
 
+interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
+    isFocused?: boolean;
+    hasError?: boolean;
+}
+
 export default forwardRef(function TextInput(
     {
         type = 'text',
         className = '',
         isFocused = false,
+        hasError = false,
         ...props
-    }: InputHTMLAttributes<HTMLInputElement> & { isFocused?: boolean },
+    }: TextInputProps,
     ref
 ) {
     const localRef = useRef<HTMLInputElement>(null);
@@ -27,14 +33,22 @@ export default forwardRef(function TextInput(
         }
     }, [isFocused]);
 
+    const baseClasses =
+        'mt-2 block w-full rounded-xl border bg-stone-50 px-4 py-3 text-slate-900 shadow-sm focus:ring-orange-500 dark:bg-slate-900 dark:text-white';
+
+    const normalClasses =
+        'border-stone-300 focus:border-orange-500 dark:border-slate-600';
+
+    const errorClasses =
+        'border-red-500 focus:border-red-500 dark:border-red-500';
+
     return (
         <input
             {...props}
             type={type}
-            className={
-                'mt-2 block w-full rounded-xl border border-stone-300 bg-stone-50 px-4 py-3 text-slate-900 shadow-sm focus:border-orange-500 focus:ring-orange-500 dark:border-slate-600 dark:bg-slate-900 dark:text-white ' +
-                className
-            }
+            className={`${baseClasses} ${
+                hasError ? errorClasses : normalClasses
+            } ${className}`}
             ref={localRef}
         />
     );

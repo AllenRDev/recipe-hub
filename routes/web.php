@@ -36,8 +36,12 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard', [
         'user' => $user,
         'recipes' => $user->recipes()
+            ->with('user')
+            ->withCount('comments')
+            ->withAvg('ratings', 'rating')
             ->latest()
-            ->get(),
+            ->paginate(6)
+            ->withQueryString(),
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 

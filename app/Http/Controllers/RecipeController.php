@@ -70,24 +70,41 @@ class RecipeController extends Controller
 
     public function store(Request $request)
 {
-    $validated = $request->validate([
-        'title' => ['required', 'string', 'max:255'],
-        'description' => ['required', 'string'],
-        'category' => ['required', 'string', 'max:100'],
+  $validated = $request->validate([
+    'title' => ['required', 'string', 'max:255'],
+    'description' => ['required', 'string'],
+    'category' => ['required', 'string', 'max:100'],
 
-        'prep_time' => ['nullable', 'integer', 'min:0'],
-        'cook_time' => ['nullable', 'integer', 'min:0'],
-        'servings' => ['nullable', 'integer', 'min:1'],
+    'prep_time' => ['required', 'integer', 'min:0'],
+    'cook_time' => ['required', 'integer', 'min:0'],
+    'servings' => ['required', 'integer', 'min:1'],
 
-        'image' => ['nullable', 'image', 'max:5120'],
+    'image' => ['required', 'image', 'max:5120'],
 
-        'ingredients' => ['required', 'array', 'min:1'],
-        'ingredients.*.amount' => ['required', 'string', 'max:100'],
-        'ingredients.*.name' => ['required', 'string', 'max:255'],
+    'ingredients' => ['required', 'array', 'min:1'],
+    'ingredients.*.amount' => ['required', 'string', 'max:100'],
+    'ingredients.*.name' => ['required', 'string', 'max:255'],
 
-        'instructions' => ['required', 'array', 'min:1'],
-        'instructions.*.step' => ['required', 'string'],
-    ]);
+    'instructions' => ['required', 'array', 'min:1'],
+    'instructions.*.step' => ['required', 'string'],
+], [
+    'title.required' => 'Please enter a recipe name.',
+    'description.required' => 'Please add a description for your recipe.',
+    'category.required' => 'Please select a category.',
+
+    'image.required' => 'Please upload an image for your recipe.',
+    'image.image' => 'The recipe image must be a valid image.',
+    'image.max' => 'The recipe image must be smaller than 5 MB.',
+
+    'ingredients.required' => 'Please add at least one ingredient.',
+    'ingredients.min' => 'Please add at least one ingredient.',
+    'ingredients.*.amount.required' => 'Please enter an amount.',
+    'ingredients.*.name.required' => 'Please enter an ingredient name.',
+
+    'instructions.required' => 'Please add at least one instruction.',
+    'instructions.min' => 'Please add at least one instruction.',
+    'instructions.*.step.required' => 'Please enter an instruction.',
+]);
 
     if ($request->hasFile('image')) {
         $validated['image'] = $request
@@ -160,9 +177,9 @@ public function show(Recipe $recipe)
         'description' => ['required', 'string'],
         'category' => ['required', 'string', 'max:100'],
 
-        'prep_time' => ['nullable', 'integer', 'min:0'],
-        'cook_time' => ['nullable', 'integer', 'min:0'],
-        'servings' => ['nullable', 'integer', 'min:1'],
+        'prep_time' => ['required', 'integer', 'min:0'],
+        'cook_time' => ['required', 'integer', 'min:0'],
+        'servings' => ['required', 'integer', 'min:1'],
 
         'image' => ['nullable', 'image', 'max:5120'],
 
@@ -175,10 +192,12 @@ public function show(Recipe $recipe)
     ]);
 
     if ($request->hasFile('image')) {
-        $validated['image'] = $request
-            ->file('image')
-            ->store('recipes', 'public');
-    }
+    $validated['image'] = $request
+        ->file('image')
+        ->store('recipes', 'public');
+} else {
+    unset($validated['image']);
+}
 
     $recipe->update($validated);
 

@@ -37,10 +37,21 @@ interface RecipeFormProps {
     children?: ReactNode;
 }
 
+const FieldError = ({ message }: { message?: string }) => {
+    if (!message) {
+        return null;
+    }
+
+    return (
+        <p className="mt-2 text-sm text-red-600 dark:text-red-400">{message}</p>
+    );
+};
+
 export default function RecipeForm({
     data,
     setData,
     processing,
+    errors,
     submit,
     submitLabel,
     processingLabel,
@@ -111,6 +122,20 @@ export default function RecipeForm({
         );
     };
 
+    const textareaClass = (hasError: boolean) =>
+        `mt-2 block w-full rounded-xl border px-4 py-3 text-slate-900 shadow-sm transition outline-none placeholder:text-slate-400 focus:ring-orange-500 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500 ${
+            hasError
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500 dark:border-red-500'
+                : 'border-stone-300 bg-stone-50 dark:border-slate-600'
+        }`;
+
+    const selectClass = (hasError: boolean) =>
+        `w-full rounded-xl border bg-stone-100 px-4 py-3 dark:bg-slate-900 dark:text-white ${
+            hasError
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500 dark:border-red-500'
+                : 'border-stone-300 dark:border-slate-700'
+        }`;
+
     return (
         <form onSubmit={submit} className="space-y-8">
             {/* Basic Recipe Information */}
@@ -128,9 +153,11 @@ export default function RecipeForm({
                         type="text"
                         value={data.title}
                         onChange={(e) => setData('title', e.target.value)}
-                        className="mt-2 block w-full"
+                        hasError={!!errors.title}
                         placeholder="e.g. Homemade Chicken Alfredo"
                     />
+
+                    <FieldError message={errors.title} />
                 </div>
 
                 <div>
@@ -141,9 +168,11 @@ export default function RecipeForm({
                     />
 
                     <select
+                        id="category"
+                        name="category"
                         value={data.category}
                         onChange={(e) => setData('category', e.target.value)}
-                        className="w-full rounded-xl border border-stone-300 bg-stone-100 px-4 py-3 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                        className={selectClass(!!errors.category)}
                     >
                         <option value="">Select a category</option>
 
@@ -153,6 +182,8 @@ export default function RecipeForm({
                             </option>
                         ))}
                     </select>
+
+                    <FieldError message={errors.category} />
                 </div>
 
                 <div>
@@ -169,8 +200,10 @@ export default function RecipeForm({
                         onChange={(e) => setData('description', e.target.value)}
                         rows={4}
                         placeholder="Tell us a little about this recipe..."
-                        className="mt-2 block w-full rounded-xl border border-stone-300 bg-stone-50 px-4 py-3 text-slate-900 shadow-sm transition outline-none placeholder:text-slate-400 focus:border-orange-500 focus:ring-orange-500 dark:border-slate-600 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500"
+                        className={textareaClass(!!errors.description)}
                     />
+
+                    <FieldError message={errors.description} />
                 </div>
 
                 <div className="grid gap-6 sm:grid-cols-3">
@@ -190,9 +223,11 @@ export default function RecipeForm({
                             onChange={(e) =>
                                 setData('prep_time', e.target.value)
                             }
-                            className="mt-2 block w-full"
+                            hasError={!!errors.prep_time}
                             placeholder="15"
                         />
+
+                        <FieldError message={errors.prep_time} />
                     </div>
 
                     <div>
@@ -211,9 +246,11 @@ export default function RecipeForm({
                             onChange={(e) =>
                                 setData('cook_time', e.target.value)
                             }
-                            className="mt-2 block w-full"
+                            hasError={!!errors.cook_time}
                             placeholder="30"
                         />
+
+                        <FieldError message={errors.cook_time} />
                     </div>
 
                     <div>
@@ -232,9 +269,11 @@ export default function RecipeForm({
                             onChange={(e) =>
                                 setData('servings', e.target.value)
                             }
-                            className="mt-2 block w-full"
+                            hasError={!!errors.servings}
                             placeholder="4"
                         />
+
+                        <FieldError message={errors.servings} />
                     </div>
                 </div>
             </div>
@@ -269,12 +308,18 @@ export default function RecipeForm({
                     onChange={(e) =>
                         setData('image', e.target.files?.[0] ?? null)
                     }
-                    className="mt-3 block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-orange-500 file:px-4 file:py-2 file:font-medium file:text-white hover:file:bg-orange-600 dark:text-slate-300"
+                    className={`mt-3 block w-full text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-orange-500 file:px-4 file:py-2 file:font-medium file:text-white hover:file:bg-orange-600 dark:text-slate-300 ${
+                        errors.image
+                            ? 'rounded-lg border border-red-500 p-2'
+                            : ''
+                    }`}
                 />
 
                 <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
                     Leave this blank to keep the current image.
                 </p>
+
+                <FieldError message={errors.image} />
             </div>
 
             {/* Ingredients */}
@@ -287,23 +332,40 @@ export default function RecipeForm({
                     <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
                         Add the ingredients needed to make your recipe.
                     </p>
+
+                    <FieldError message={errors.ingredients} />
                 </div>
 
                 <div className="space-y-4">
                     {data.ingredients.map((ingredient, index) => (
-                        <IngredientInput
-                            key={index}
-                            amount={ingredient.amount}
-                            name={ingredient.name}
-                            onAmountChange={(value) =>
-                                updateIngredient(index, 'amount', value)
-                            }
-                            onNameChange={(value) =>
-                                updateIngredient(index, 'name', value)
-                            }
-                            onRemove={() => removeIngredient(index)}
-                            canRemove={data.ingredients.length > 1}
-                        />
+                        <div key={index}>
+                            <IngredientInput
+                                amount={ingredient.amount}
+                                name={ingredient.name}
+                                onAmountChange={(value) =>
+                                    updateIngredient(index, 'amount', value)
+                                }
+                                onNameChange={(value) =>
+                                    updateIngredient(index, 'name', value)
+                                }
+                                onRemove={() => removeIngredient(index)}
+                                canRemove={data.ingredients.length > 1}
+                                hasAmountError={
+                                    !!errors[`ingredients.${index}.amount`]
+                                }
+                                hasNameError={
+                                    !!errors[`ingredients.${index}.name`]
+                                }
+                            />
+
+                            <FieldError
+                                message={errors[`ingredients.${index}.amount`]}
+                            />
+
+                            <FieldError
+                                message={errors[`ingredients.${index}.name`]}
+                            />
+                        </div>
                     ))}
                 </div>
 
@@ -326,20 +388,30 @@ export default function RecipeForm({
                     <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
                         Walk the community through your recipe step by step.
                     </p>
+
+                    <FieldError message={errors.instructions} />
                 </div>
 
                 <div className="space-y-5">
                     {data.instructions.map((instruction, index) => (
-                        <InstructionInput
-                            key={index}
-                            step={index + 1}
-                            instruction={instruction.step}
-                            onChange={(value) =>
-                                updateInstruction(index, value)
-                            }
-                            onRemove={() => removeInstruction(index)}
-                            canRemove={data.instructions.length > 1}
-                        />
+                        <div key={index}>
+                            <InstructionInput
+                                step={index + 1}
+                                instruction={instruction.step}
+                                onChange={(value) =>
+                                    updateInstruction(index, value)
+                                }
+                                onRemove={() => removeInstruction(index)}
+                                canRemove={data.instructions.length > 1}
+                                hasError={
+                                    !!errors[`instructions.${index}.step`]
+                                }
+                            />
+
+                            <FieldError
+                                message={errors[`instructions.${index}.step`]}
+                            />
+                        </div>
                     ))}
                 </div>
 

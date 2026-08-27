@@ -42,7 +42,12 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
                     {recipe.user.name}
                 </Link>
                 <div className="mt-4 flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
-                    <span>⭐ {recipe.ratings_avg_rating}</span>
+                    <span>
+                        ⭐{' '}
+                        {recipe.ratings_avg_rating
+                            ? recipe.ratings_avg_rating + '/5'
+                            : 'No ratings'}
+                    </span>
                     <span>
                         💬 {recipe.comments_count}{' '}
                         {recipe.comments_count === 1 ? 'comment' : 'comments'}

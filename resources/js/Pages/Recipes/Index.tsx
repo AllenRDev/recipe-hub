@@ -37,7 +37,7 @@ export default function Index({ recipes, filters }: Props) {
             {
                 preserveState: true,
                 replace: true,
-            },
+            }
         );
     };
 
@@ -115,10 +115,7 @@ export default function Index({ recipes, filters }: Props) {
 
                     <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                         {recipes.data.map((recipe) => (
-                            <RecipeCard
-                                key={recipe.id}
-                                recipe={recipe}
-                            />
+                            <RecipeCard key={recipe.id} recipe={recipe} />
                         ))}
                     </div>
 

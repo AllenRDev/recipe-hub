@@ -52,23 +52,23 @@ export default function Show({ user, recipes }: Props) {
                             </h2>
 
                             {recipes.data.length > 0 ? (
-    <>
-        <div className="mt-6 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {recipes.data.map((recipe) => (
-                <RecipeCard
-                    key={recipe.id}
-                    recipe={recipe}
-                />
-            ))}
-        </div>
+                                <>
+                                    <div className="mt-6 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                                        {recipes.data.map((recipe) => (
+                                            <RecipeCard
+                                                key={recipe.id}
+                                                recipe={recipe}
+                                            />
+                                        ))}
+                                    </div>
 
-        <Pagination
-            currentPage={recipes.current_page}
-            lastPage={recipes.last_page}
-            prevUrl={recipes.prev_page_url}
-            nextUrl={recipes.next_page_url}
-        />
-    </>
+                                    <Pagination
+                                        currentPage={recipes.current_page}
+                                        lastPage={recipes.last_page}
+                                        prevUrl={recipes.prev_page_url}
+                                        nextUrl={recipes.next_page_url}
+                                    />
+                                </>
                             ) : (
                                 <p className="mt-6 text-slate-600 dark:text-slate-300">
                                     This user hasn't posted any recipes yet.
