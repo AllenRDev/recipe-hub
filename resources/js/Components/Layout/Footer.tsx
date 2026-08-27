@@ -67,14 +67,16 @@ export default function Footer() {
 
                     <div className="mt-4 flex gap-4">
                         <a
-                            href="#"
+                            href="https://github.com/AllenRDev/recipe-hub"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="text-gray-600 transition hover:text-orange-500 dark:text-gray-300"
                         >
                             <FaGithub size={22} />
                         </a>
 
                         <a
-                            href="#"
+                            href="https://www.linkedin.com/in/allen-roberts-298670199/"
                             className="text-gray-600 transition hover:text-orange-500 dark:text-gray-300"
                         >
                             <FaLinkedin size={22} />
