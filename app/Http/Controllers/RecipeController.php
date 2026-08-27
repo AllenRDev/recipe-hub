@@ -8,18 +8,56 @@ use Inertia\Inertia;
 
 class RecipeController extends Controller
 {
-    public function index()
-    {
-        $recipes = Recipe::with('user')
-            ->withCount('comments')
-            ->withAvg('ratings', 'rating')
-            ->latest()
-            ->get();
+    public function index(Request $request)
+{
+    $search = $request->input('search');
+    $category = $request->input('category');
+    $sort = $request->input('sort', 'newest');
 
-        return Inertia::render('Recipes/Index', [
-            'recipes' => $recipes,
-        ]);
+    $query = Recipe::with('user')
+        ->withCount('comments')
+        ->withAvg('ratings', 'rating');
+
+    if ($search) {
+        $query->where('title', 'like', '%' . $search . '%');
     }
+
+    if ($category && $category !== 'All') {
+        $query->where('category', $category);
+    }
+
+    switch ($sort) {
+        case 'oldest':
+            $query->oldest();
+            break;
+
+        case 'az':
+            $query->orderBy('title');
+            break;
+
+        case 'za':
+            $query->orderByDesc('title');
+            break;
+
+        case 'newest':
+        default:
+            $query->latest();
+            break;
+    }
+
+    $recipes = $query
+        ->paginate(6)
+        ->withQueryString();
+
+    return Inertia::render('Recipes/Index', [
+        'recipes' => $recipes,
+        'filters' => [
+            'search' => $search ?? '',
+            'category' => $category ?? 'All',
+            'sort' => $sort,
+        ],
+    ]);
+}
 
 
     /**

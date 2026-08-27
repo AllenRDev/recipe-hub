@@ -26,6 +26,10 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/about', function () {
+    return Inertia::render('About');
+})->name('about');
+
 Route::get('/dashboard', function () {
     $user = request()->user();
 
@@ -57,16 +61,6 @@ Route::get('/recipes', [
 
 Route::middleware('auth')->group(function () {
     Route::resource('recipes', RecipeController::class);
-
-    Route::get('/recipes/create', [
-        RecipeController::class,
-        'create',
-    ])->name('recipes.create');
-
-    Route::post('/recipes', [
-        RecipeController::class,
-        'store',
-    ])->name('recipes.store');
 
     Route::post('/recipes/{recipe}/rating', [
     RatingController::class,

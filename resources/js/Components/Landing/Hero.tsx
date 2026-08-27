@@ -43,7 +43,11 @@ export default function Hero() {
                 {/* Visual */}
                 <div className="relative">
                     <div className="group rounded-3xl bg-white p-6 shadow-xl transition-all duration-300 hover:-translate-y-3 hover:rotate-1 hover:shadow-2xl dark:bg-slate-900">
-                        <div className="aspect-video rounded-2xl bg-gradient-to-br from-orange-200 to-yellow-100 dark:from-orange-900 dark:to-slate-800" />
+                        <img
+                            src="/images/pasta.jpg"
+                            alt="Homemade Pasta"
+                            className="aspect-video w-full rounded-2xl object-cover"
+                        />
 
                         <div className="mt-6">
                             <h3 className="text-xl font-bold text-slate-900 dark:text-white">

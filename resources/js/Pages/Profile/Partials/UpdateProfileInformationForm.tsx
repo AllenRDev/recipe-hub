@@ -204,7 +204,7 @@ export default function UpdateProfileInformationForm({
                     <InputLabel htmlFor="bio" value="Bio" />
                     <textarea
                         id="bio"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:border-slate-600 dark:bg-slate-900"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm dark:border-slate-600 dark:bg-slate-900 dark:text-white focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                         rows={4}
                         value={data.bio}
                         onChange={(e) => setData('bio', e.target.value)}

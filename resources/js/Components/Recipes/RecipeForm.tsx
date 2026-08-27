@@ -46,7 +46,6 @@ export default function RecipeForm({
     processingLabel,
     existingImage,
 }: RecipeFormProps) {
-
     const addIngredient = () => {
         setData('ingredients', [
             ...data.ingredients,
@@ -142,18 +141,18 @@ export default function RecipeForm({
                     />
 
                     <select
-    value={data.category}
-    onChange={(e) => setData('category', e.target.value)}
-    className="w-full rounded-xl border bg-stone-100 px-4 py-3 border-stone-300 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
->
-    <option value="">Select a category</option>
+                        value={data.category}
+                        onChange={(e) => setData('category', e.target.value)}
+                        className="w-full rounded-xl border border-stone-300 bg-stone-100 px-4 py-3 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                    >
+                        <option value="">Select a category</option>
 
-    {RECIPE_CATEGORIES.map((category) => (
-        <option key={category} value={category}>
-            {category}
-        </option>
-    ))}
-</select>
+                        {RECIPE_CATEGORIES.map((category) => (
+                            <option key={category} value={category}>
+                                {category}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
                 <div>

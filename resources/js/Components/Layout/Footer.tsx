@@ -50,7 +50,7 @@ export default function Footer() {
 
                         <li>
                             <Link
-                                href="/about"
+                                href={route('about')}
                                 className="hover:text-orange-500"
                             >
                                 About

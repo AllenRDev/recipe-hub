@@ -1,10 +1,11 @@
 import { Head } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import RecipeCard from '@/Components/Recipes/RecipeCard';
-import { Recipe } from '@/types/recipes';
+import { PaginatedRecipes } from '@/types/recipes';
+import Pagination from '@/Components/Pagination';
 
 interface Props {
-    recipes: Recipe[];
+    recipes: PaginatedRecipes;
 }
 
 export default function Favorites({ recipes }: Props) {
@@ -24,13 +25,10 @@ export default function Favorites({ recipes }: Props) {
                         </p>
                     </div>
 
-                    {recipes.length > 0 ? (
+                    {recipes.data.length > 0 ? (
                         <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                            {recipes.map((recipe) => (
-                                <RecipeCard
-                                    key={recipe.id}
-                                    recipe={recipe}
-                                />
+                            {recipes.data.map((recipe) => (
+                                <RecipeCard key={recipe.id} recipe={recipe} />
                             ))}
                         </div>
                     ) : (
@@ -44,6 +42,12 @@ export default function Favorites({ recipes }: Props) {
                             </p>
                         </div>
                     )}
+                    <Pagination
+                        currentPage={recipes.current_page}
+                        lastPage={recipes.last_page}
+                        prevUrl={recipes.prev_page_url}
+                        nextUrl={recipes.next_page_url}
+                    />
                 </div>
             </section>
         </AuthenticatedLayout>

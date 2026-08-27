@@ -14,7 +14,8 @@ class FavoritesController extends Controller
             ->withCount('comments')
             ->withAvg('ratings', 'rating')
             ->latest()
-            ->get();
+            ->paginate(6)
+            ->withQueryString();
 
         return Inertia::render('Recipes/Favorites', [
             'recipes' => $recipes,

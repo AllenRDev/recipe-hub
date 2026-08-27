@@ -97,35 +97,42 @@ export default function Show({ recipe, userRating, isFavorited }: Props) {
                             </h1>
 
                             <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-    By{': '}
-    <Link
-        href={route('users.show', recipe.user.id)}
-        className="font-medium text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300"
-    >
-        {recipe.user.name}
-    </Link>
-</p>
-{isFavorited ? (
-    <button
-        type="button"
-        onClick={() =>
-            router.delete(route('recipes.unfavorite', recipe.id))
-        }
-        className="rounded-xl mt-4 border border-orange-500 px-4 py-2 font-medium text-orange-500 transition hover:bg-orange-50 dark:hover:bg-orange-950"
-    >
-        ♥ Saved
-    </button>
-) : (
-    <button
-        type="button"
-        onClick={() =>
-            router.post(route('recipes.favorite', recipe.id))
-        }
-        className="rounded-xl bg-orange-500 mt-4 px-4 py-2 font-medium text-white transition hover:bg-orange-600"
-    >
-        ♡ Save
-    </button>
-)}
+                                By{': '}
+                                <Link
+                                    href={route('users.show', recipe.user.id)}
+                                    className="font-medium text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300"
+                                >
+                                    {recipe.user.name}
+                                </Link>
+                            </p>
+                            {isFavorited ? (
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        router.delete(
+                                            route(
+                                                'recipes.unfavorite',
+                                                recipe.id
+                                            )
+                                        )
+                                    }
+                                    className="mt-4 rounded-xl border border-orange-500 px-4 py-2 font-medium text-orange-500 transition hover:bg-orange-50 dark:hover:bg-orange-950"
+                                >
+                                    ♥ Saved
+                                </button>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        router.post(
+                                            route('recipes.favorite', recipe.id)
+                                        )
+                                    }
+                                    className="mt-4 rounded-xl bg-orange-500 px-4 py-2 font-medium text-white transition hover:bg-orange-600"
+                                >
+                                    ♡ Save
+                                </button>
+                            )}
 
                             {user && user.id === recipe.user.id && (
                                 <div className="mt-5 flex gap-3">

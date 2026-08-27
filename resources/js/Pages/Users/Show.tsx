@@ -1,16 +1,16 @@
 import { Head, Link } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import RecipeCard from '@/Components/Recipes/RecipeCard';
-import { Recipe } from '@/types/recipes';
+import { PaginatedRecipes } from '@/types/recipes';
 import type { User } from '@/types';
+import Pagination from '@/Components/Pagination';
 
 interface Props {
-    user: User & {
-        recipes: Recipe[];
-    };
+    user: User;
+    recipes: PaginatedRecipes;
 }
 
-export default function Show({ user }: Props) {
+export default function Show({ user, recipes }: Props) {
     return (
         <>
             <Head title={`${user.name}'s Profile`} />
@@ -32,7 +32,7 @@ export default function Show({ user }: Props) {
                                     </div>
                                 )}
 
-                                <div className="mt-6 sm:ml-8 sm:mt-2">
+                                <div className="mt-6 sm:mt-2 sm:ml-8">
                                     <h1 className="text-4xl font-bold text-slate-900 dark:text-white">
                                         {user.name}
                                     </h1>
@@ -51,15 +51,24 @@ export default function Show({ user }: Props) {
                                 {user.name}'s Recipes
                             </h2>
 
-                            {user.recipes.length > 0 ? (
-                                <div className="mt-6 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                                    {user.recipes.map((recipe) => (
-                                        <RecipeCard
-                                            key={recipe.id}
-                                            recipe={recipe}
-                                        />
-                                    ))}
-                                </div>
+                            {recipes.data.length > 0 ? (
+    <>
+        <div className="mt-6 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {recipes.data.map((recipe) => (
+                <RecipeCard
+                    key={recipe.id}
+                    recipe={recipe}
+                />
+            ))}
+        </div>
+
+        <Pagination
+            currentPage={recipes.current_page}
+            lastPage={recipes.last_page}
+            prevUrl={recipes.prev_page_url}
+            nextUrl={recipes.next_page_url}
+        />
+    </>
                             ) : (
                                 <p className="mt-6 text-slate-600 dark:text-slate-300">
                                     This user hasn't posted any recipes yet.

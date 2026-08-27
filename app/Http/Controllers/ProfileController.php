@@ -79,17 +79,19 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-       public function show(User $user)
-    {
-        $user->load([
-            'recipes' => function ($query) {
-                $query->with('user')
-                    ->latest();
-            },
-        ]);
+    public function show(User $user)
+{
+    $recipes = $user->recipes()
+        ->with('user')
+        ->withCount('comments')
+        ->withAvg('ratings', 'rating')
+        ->latest()
+        ->paginate(6)
+        ->withQueryString();
 
-        return Inertia::render('Users/Show', [
-            'user' => $user,
-        ]);
-    }
+    return Inertia::render('Users/Show', [
+        'user' => $user,
+        'recipes' => $recipes,
+    ]);
+}
 }

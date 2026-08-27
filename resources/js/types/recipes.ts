@@ -36,3 +36,15 @@ export interface Recipe {
     comments_count?: number;
     comments?: Comment[];
 }
+
+export interface PaginatedRecipes {
+    data: Recipe[];
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+    from: number | null;
+    to: number | null;
+    prev_page_url: string | null;
+    next_page_url: string | null;
+}
