@@ -11,23 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('ratings', function (Blueprint $table) {
-    $table->id();
+        Schema::create('ratings', function (Blueprint $table) {
+            $table->id();
 
-    $table->foreignId('user_id')
-        ->constrained()
-        ->cascadeOnDelete();
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
-    $table->foreignId('recipe_id')
-        ->constrained()
-        ->cascadeOnDelete();
+            $table->foreignId('recipe_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
-    $table->unsignedTinyInteger('rating');
+            $table->unsignedTinyInteger('rating');
 
-    $table->timestamps();
+            $table->timestamps();
 
-    $table->unique(['user_id', 'recipe_id']);
-});
+            $table->unique(['user_id', 'recipe_id']);
+        });
     }
 
     /**

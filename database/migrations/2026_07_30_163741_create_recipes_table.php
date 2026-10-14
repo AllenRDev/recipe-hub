@@ -12,32 +12,32 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('recipes', function (Blueprint $table) {
-        $table->id();
+            $table->id();
 
-        $table->foreignId('user_id')
-            ->constrained()
-            ->cascadeOnDelete();
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
-        $table->string('title');
+            $table->string('title');
 
-        $table->text('description')->nullable();
+            $table->text('description')->nullable();
 
-        $table->json('ingredients');
+            $table->json('ingredients');
 
-        $table->json('instructions');
+            $table->json('instructions');
 
-        $table->unsignedInteger('prep_time')->nullable();
+            $table->unsignedInteger('prep_time')->nullable();
 
-        $table->unsignedInteger('cook_time')->nullable();
+            $table->unsignedInteger('cook_time')->nullable();
 
-        $table->unsignedInteger('servings')->nullable();
+            $table->unsignedInteger('servings')->nullable();
 
-        $table->string('image')->nullable();
+            $table->string('image')->nullable();
 
-        $table->string('category')->nullable();
+            $table->string('category')->nullable();
 
-        $table->timestamps();
-});
+            $table->timestamps();
+        });
     }
 
     /**

@@ -9,7 +9,7 @@ export default function PrimaryButton({
     return (
         <button
             {...props}
-            className="w-full justify-center rounded-xl bg-orange-500 py-3 text-white transition hover:bg-orange-600"
+            className={`w-full justify-center rounded-xl bg-orange-500 py-3 text-white transition hover:bg-orange-600 ${className}`}
             disabled={disabled}
         >
             {children}

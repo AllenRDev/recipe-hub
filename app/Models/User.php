@@ -2,24 +2,33 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\Recipe;
 
-#[Fillable(['name','email','password','bio','profile_image',])]
-#[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    protected $appends = ['profile_url'];
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    protected $appends = ['profile_url'];
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'bio',
+        'profile_image',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
     /**
      * Get the attributes that should be cast.
@@ -36,28 +45,28 @@ class User extends Authenticatable
 
     public function recipes(): HasMany
     {
-    return $this->hasMany(Recipe::class);
+        return $this->hasMany(Recipe::class);
     }
 
     public function ratings(): HasMany
-{
-    return $this->hasMany(Rating::class);
-}
+    {
+        return $this->hasMany(Rating::class);
+    }
 
-public function comments(): HasMany
-{
-    return $this->hasMany(Comment::class);
-}
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
 
-public function favoriteRecipes(): BelongsToMany
-{
-    return $this->belongsToMany(Recipe::class);
-}
+    public function favoriteRecipes(): BelongsToMany
+    {
+        return $this->belongsToMany(Recipe::class, 'recipe_user');
+    }
 
     public function getProfileUrlAttribute(): ?string
     {
         return $this->profile_image
-            ? asset('storage/' . $this->profile_image) 
+            ? asset('storage/'.$this->profile_image)
             : null;
     }
 }

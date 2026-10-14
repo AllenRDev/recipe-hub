@@ -58,3 +58,47 @@ test('password can be reset with valid token', function () {
         return true;
     });
 });
+
+test('a reset link cannot be requested for an unknown email', function () {
+    Notification::fake();
+
+    $response = $this->post('/forgot-password', ['email' => 'nobody@example.com']);
+
+    $response->assertSessionHasErrors('email');
+
+    Notification::assertNothingSent();
+});
+
+test('password cannot be reset with an invalid token', function () {
+    $user = User::factory()->create();
+
+    $response = $this->post('/reset-password', [
+        'token' => 'invalid-token',
+        'email' => $user->email,
+        'password' => 'new-password',
+        'password_confirmation' => 'new-password',
+    ]);
+
+    $response->assertSessionHasErrors('email');
+});
+
+test('password reset requires a matching confirmation', function () {
+    Notification::fake();
+
+    $user = User::factory()->create();
+
+    $this->post('/forgot-password', ['email' => $user->email]);
+
+    Notification::assertSentTo($user, ResetPassword::class, function ($notification) use ($user) {
+        $response = $this->post('/reset-password', [
+            'token' => $notification->token,
+            'email' => $user->email,
+            'password' => 'new-password',
+            'password_confirmation' => 'different',
+        ]);
+
+        $response->assertSessionHasErrors('password');
+
+        return true;
+    });
+});

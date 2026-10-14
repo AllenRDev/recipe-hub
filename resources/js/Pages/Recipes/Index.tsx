@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { router } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import RecipeCard from '@/Components/Recipes/RecipeCard';
-import { Recipe, PaginatedRecipes } from '@/types/recipes';
+import { PaginatedRecipes } from '@/types/recipes';
 import { RECIPE_CATEGORIES } from '@/constants/recipeCategories';
 import Pagination from '@/Components/Pagination';
 

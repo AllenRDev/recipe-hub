@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('recipe_user', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-    $table->foreignId('recipe_id')->constrained()->cascadeOnDelete();
-    $table->timestamps();
+        Schema::create('recipe_user', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('recipe_id')->constrained()->cascadeOnDelete();
+            $table->timestamps();
 
-    $table->unique(['user_id', 'recipe_id']);
-});
+            $table->unique(['user_id', 'recipe_id']);
+        });
     }
 
     /**

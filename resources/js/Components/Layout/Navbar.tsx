@@ -1,10 +1,11 @@
-import { Link, usePage } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import ThemeToggle from './ThemeToggle';
 import useAuth from '@/hooks/useAuth';
-import { router } from '@inertiajs/react';
 
 export default function Navbar() {
     const { user, isAuthenticated } = useAuth();
+
+    const canManage = isAuthenticated && user.email_verified_at !== null;
 
     const logout = () => {
         router.post(route('logout'));
@@ -32,12 +33,14 @@ export default function Navbar() {
                     >
                         Browse
                     </Link>
-                    <Link
-                        href={route('favorites.index')}
-                        className="text-gray-600 hover:text-orange-500 dark:text-gray-300"
-                    >
-                        Favorites
-                    </Link>
+                    {canManage && (
+                        <Link
+                            href={route('favorites.index')}
+                            className="text-gray-600 hover:text-orange-500 dark:text-gray-300"
+                        >
+                            Favorites
+                        </Link>
+                    )}
                     <Link
                         href={route('about')}
                         className="text-gray-600 hover:text-orange-500 dark:text-gray-300"
@@ -49,7 +52,7 @@ export default function Navbar() {
                 {/* Right Side */}
                 <div className="flex items-center gap-3">
                     <ThemeToggle />
-                    {isAuthenticated ? (
+                    {canManage ? (
                         <>
                             <Link
                                 href={route('recipes.create')}
@@ -71,6 +74,13 @@ export default function Navbar() {
                                 Log out
                             </button>
                         </>
+                    ) : isAuthenticated ? (
+                        <button
+                            onClick={logout}
+                            className="rounded-lg px-4 py-2 text-gray-600 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-800"
+                        >
+                            Log out
+                        </button>
                     ) : (
                         <>
                             <Link

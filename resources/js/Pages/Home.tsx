@@ -9,7 +9,6 @@ interface Props {
 }
 
 export default function Home({ featuredRecipes }: Props) {
-    console.log('Featured Recipes:', featuredRecipes); // Debugging line to check the data
     return (
         <GuestLayout>
             <Hero />

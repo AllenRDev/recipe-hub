@@ -1,3 +1,4 @@
+import ConfirmDialog from '@/Components/ConfirmDialog';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, router } from '@inertiajs/react';
 import { FormEvent, useState } from 'react';
@@ -17,6 +18,27 @@ export default function Show({ recipe, userRating, isFavorited }: Props) {
     const [hoverRating, setHoverRating] = useState(0);
     const [comment, setComment] = useState('');
     const [commentSubmitting, setCommentSubmitting] = useState(false);
+    const [showDeleteRecipe, setShowDeleteRecipe] = useState(false);
+    const [commentToDelete, setCommentToDelete] = useState<number | null>(null);
+
+    const deleteRecipe = () => {
+        setShowDeleteRecipe(false);
+
+        router.delete(route('recipes.destroy', recipe.id));
+    };
+
+    const deleteComment = () => {
+        if (commentToDelete === null) {
+            return;
+        }
+
+        const id = commentToDelete;
+        setCommentToDelete(null);
+
+        router.delete(route('comments.destroy', id), {
+            preserveScroll: true,
+        });
+    };
 
     const submitComment = (event: FormEvent) => {
         event.preventDefault();
@@ -145,20 +167,7 @@ export default function Show({ recipe, userRating, isFavorited }: Props) {
 
                                     <button
                                         type="button"
-                                        onClick={() => {
-                                            if (
-                                                confirm(
-                                                    'Are you sure you want to delete this recipe? This cannot be undone.'
-                                                )
-                                            ) {
-                                                router.delete(
-                                                    route(
-                                                        'recipes.destroy',
-                                                        recipe.id
-                                                    )
-                                                );
-                                            }
-                                        }}
+                                        onClick={() => setShowDeleteRecipe(true)}
                                         className="rounded-lg border border-red-200 px-4 py-2 text-sm font-medium text-red-500 transition hover:bg-red-50 dark:border-red-500/50 dark:hover:bg-red-950/30"
                                     >
                                         Delete Recipe
@@ -423,23 +432,11 @@ export default function Show({ recipe, userRating, isFavorited }: Props) {
                                                         user.id && (
                                                         <button
                                                             type="button"
-                                                            onClick={() => {
-                                                                if (
-                                                                    confirm(
-                                                                        'Are you sure you want to delete this comment?'
-                                                                    )
-                                                                ) {
-                                                                    router.delete(
-                                                                        route(
-                                                                            'comments.destroy',
-                                                                            comment.id
-                                                                        ),
-                                                                        {
-                                                                            preserveScroll: true,
-                                                                        }
-                                                                    );
-                                                                }
-                                                            }}
+                                                            onClick={() =>
+                                                                setCommentToDelete(
+                                                                    comment.id
+                                                                )
+                                                            }
                                                             className="text-sm text-slate-400 transition hover:text-red-500"
                                                         >
                                                             Delete
@@ -463,6 +460,24 @@ export default function Show({ recipe, userRating, isFavorited }: Props) {
                     </section>
                 </div>
             </main>
+
+            <ConfirmDialog
+                show={showDeleteRecipe}
+                title="Delete Recipe"
+                message="Are you sure you want to delete this recipe? This cannot be undone."
+                confirmLabel="Delete Recipe"
+                onConfirm={deleteRecipe}
+                onCancel={() => setShowDeleteRecipe(false)}
+            />
+
+            <ConfirmDialog
+                show={commentToDelete !== null}
+                title="Delete Comment"
+                message="Are you sure you want to delete this comment? This cannot be undone."
+                confirmLabel="Delete Comment"
+                onConfirm={deleteComment}
+                onCancel={() => setCommentToDelete(null)}
+            />
         </GuestLayout>
     );
 }

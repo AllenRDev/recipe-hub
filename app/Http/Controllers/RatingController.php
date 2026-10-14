@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Recipe;
 use App\Models\Rating;
+use App\Models\Recipe;
 use Illuminate\Http\Request;
 
 class RatingController extends Controller

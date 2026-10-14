@@ -26,7 +26,6 @@ export default function UpdateProfileInformationForm({
     const {
         data,
         setData,
-        patch,
         post,
         errors,
         processing,

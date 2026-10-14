@@ -2,63 +2,68 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreRecipeRequest;
+use App\Http\Requests\UpdateRecipeRequest;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class RecipeController extends Controller
 {
     public function index(Request $request)
-{
-    $search = $request->input('search');
-    $category = $request->input('category');
-    $sort = $request->input('sort', 'newest');
+    {
+        $search = $request->input('search');
+        $category = $request->input('category');
+        $sort = $request->input('sort', 'newest');
 
-    $query = Recipe::with('user')
-        ->withCount('comments')
-        ->withAvg('ratings', 'rating');
+        $query = Recipe::with('user')
+            ->withCount('comments')
+            ->withAvg('ratings', 'rating');
 
-    if ($search) {
-        $query->where('title', 'like', '%' . $search . '%');
+        if ($search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('title', 'like', '%'.$search.'%')
+                    ->orWhere('description', 'like', '%'.$search.'%');
+            });
+        }
+
+        if ($category && $category !== 'All') {
+            $query->where('category', $category);
+        }
+
+        switch ($sort) {
+            case 'oldest':
+                $query->oldest();
+                break;
+
+            case 'az':
+                $query->orderBy('title');
+                break;
+
+            case 'za':
+                $query->orderByDesc('title');
+                break;
+
+            case 'newest':
+            default:
+                $query->latest();
+                break;
+        }
+
+        $recipes = $query
+            ->paginate(6)
+            ->withQueryString();
+
+        return Inertia::render('Recipes/Index', [
+            'recipes' => $recipes,
+            'filters' => [
+                'search' => $search ?? '',
+                'category' => $category ?? 'All',
+                'sort' => $sort,
+            ],
+        ]);
     }
-
-    if ($category && $category !== 'All') {
-        $query->where('category', $category);
-    }
-
-    switch ($sort) {
-        case 'oldest':
-            $query->oldest();
-            break;
-
-        case 'az':
-            $query->orderBy('title');
-            break;
-
-        case 'za':
-            $query->orderByDesc('title');
-            break;
-
-        case 'newest':
-        default:
-            $query->latest();
-            break;
-    }
-
-    $recipes = $query
-        ->paginate(6)
-        ->withQueryString();
-
-    return Inertia::render('Recipes/Index', [
-        'recipes' => $recipes,
-        'filters' => [
-            'search' => $search ?? '',
-            'category' => $category ?? 'All',
-            'sort' => $sort,
-        ],
-    ]);
-}
-
 
     /**
      * Show the form for creating a new resource.
@@ -68,154 +73,113 @@ class RecipeController extends Controller
         return Inertia::render('Recipes/Create');
     }
 
-    public function store(Request $request)
-{
-  $validated = $request->validate([
-    'title' => ['required', 'string', 'max:255'],
-    'description' => ['required', 'string'],
-    'category' => ['required', 'string', 'max:100'],
+    public function store(StoreRecipeRequest $request)
+    {
+        $validated = $request->validated();
 
-    'prep_time' => ['required', 'integer', 'min:0'],
-    'cook_time' => ['required', 'integer', 'min:0'],
-    'servings' => ['required', 'integer', 'min:1'],
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request
+                ->file('image')
+                ->store('recipes', 'public');
+        }
 
-    'image' => ['required', 'image', 'max:5120'],
+        $recipe = $request->user()->recipes()->create($validated);
 
-    'ingredients' => ['required', 'array', 'min:1'],
-    'ingredients.*.amount' => ['required', 'string', 'max:100'],
-    'ingredients.*.name' => ['required', 'string', 'max:255'],
-
-    'instructions' => ['required', 'array', 'min:1'],
-    'instructions.*.step' => ['required', 'string'],
-], [
-    'title.required' => 'Please enter a recipe name.',
-    'description.required' => 'Please add a description for your recipe.',
-    'category.required' => 'Please select a category.',
-
-    'image.required' => 'Please upload an image for your recipe.',
-    'image.image' => 'The recipe image must be a valid image.',
-    'image.max' => 'The recipe image must be smaller than 5 MB.',
-
-    'ingredients.required' => 'Please add at least one ingredient.',
-    'ingredients.min' => 'Please add at least one ingredient.',
-    'ingredients.*.amount.required' => 'Please enter an amount.',
-    'ingredients.*.name.required' => 'Please enter an ingredient name.',
-
-    'instructions.required' => 'Please add at least one instruction.',
-    'instructions.min' => 'Please add at least one instruction.',
-    'instructions.*.step.required' => 'Please enter an instruction.',
-]);
-
-    if ($request->hasFile('image')) {
-        $validated['image'] = $request
-            ->file('image')
-            ->store('recipes', 'public');
+        return redirect()
+            ->route('recipes.show', $recipe)
+            ->with('success', 'Recipe created successfully!');
     }
 
-    $recipe = $request->user()->recipes()->create($validated);
+    public function show(Recipe $recipe)
+    {
+        $recipe->load([
+            'user',
+            'comments.user',
+        ]);
 
-    return redirect()
-        ->route('recipes.show', $recipe)
-        ->with('success', 'Recipe created successfully!');
-}
+        $recipe->loadCount([
+            'ratings',
+            'comments',
+        ]);
 
-public function show(Recipe $recipe)
-{
-    $recipe->load([
-        'user',
-        'comments.user',
-    ]);
+        $recipe->loadAvg('ratings', 'rating');
 
-    $recipe->loadCount([
-        'ratings',
-        'comments',
-    ]);
+        $userRating = null;
+        $isFavorited = false;
 
-    $recipe->loadAvg('ratings', 'rating');
+        if (auth()->check()) {
+            $userRating = $recipe->ratings()
+                ->where('user_id', auth()->id())
+                ->value('rating');
 
-    $userRating = null;
-    $isFavorited = false;
+            $isFavorited = auth()->user()
+                ->favoriteRecipes()
+                ->where('recipe_id', $recipe->id)
+                ->exists();
+        }
 
-    if (auth()->check()) {
-        $userRating = $recipe->ratings()
-            ->where('user_id', auth()->id())
-            ->value('rating');
-
-        $isFavorited = auth()->user()
-        ->favoriteRecipes()
-        ->where('recipe_id', $recipe->id)
-        ->exists();
+        return Inertia::render('Recipes/Show', [
+            'recipe' => $recipe,
+            'userRating' => $userRating,
+            'isFavorited' => $isFavorited,
+        ]);
     }
 
-    return Inertia::render('Recipes/Show', [
-        'recipe' => $recipe,
-        'userRating' => $userRating,
-        'isFavorited' => $isFavorited,
-    ]);
-}
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(Recipe $recipe)
-{
-    abort_unless($recipe->user_id === auth()->id(), 403);
+    {
+        $this->authorize('update', $recipe);
 
-    return Inertia::render('Recipes/Edit', [
-        'recipe' => $recipe,
-    ]);
-}
+        return Inertia::render('Recipes/Edit', [
+            'recipe' => $recipe,
+        ]);
+    }
 
     /**
      * Update the specified resource in storage.
      */
-   public function update(Request $request, Recipe $recipe)
-{
-    abort_unless($recipe->user_id === auth()->id(), 403);
+    public function update(UpdateRecipeRequest $request, Recipe $recipe)
+    {
+        $this->authorize('update', $recipe);
 
-    $validated = $request->validate([
-        'title' => ['required', 'string', 'max:255'],
-        'description' => ['required', 'string'],
-        'category' => ['required', 'string', 'max:100'],
+        $validated = $request->validated();
 
-        'prep_time' => ['required', 'integer', 'min:0'],
-        'cook_time' => ['required', 'integer', 'min:0'],
-        'servings' => ['required', 'integer', 'min:1'],
+        if ($request->hasFile('image')) {
+            if ($recipe->image) {
+                Storage::disk('public')->delete($recipe->image);
+            }
 
-        'image' => ['nullable', 'image', 'max:5120'],
+            $validated['image'] = $request
+                ->file('image')
+                ->store('recipes', 'public');
+        } else {
+            unset($validated['image']);
+        }
 
-        'ingredients' => ['required', 'array', 'min:1'],
-        'ingredients.*.amount' => ['required', 'string', 'max:100'],
-        'ingredients.*.name' => ['required', 'string', 'max:255'],
+        $recipe->update($validated);
 
-        'instructions' => ['required', 'array', 'min:1'],
-        'instructions.*.step' => ['required', 'string'],
-    ]);
+        return redirect()
+            ->route('recipes.show', $recipe)
+            ->with('success', 'Recipe updated successfully!');
+    }
 
-    if ($request->hasFile('image')) {
-    $validated['image'] = $request
-        ->file('image')
-        ->store('recipes', 'public');
-} else {
-    unset($validated['image']);
-}
-
-    $recipe->update($validated);
-
-    return redirect()
-        ->route('recipes.show', $recipe)
-        ->with('success', 'Recipe updated successfully!');
-}
     /**
      * Remove the specified resource from storage.
      */
-   public function destroy(Recipe $recipe)
-{
-    abort_unless($recipe->user_id === auth()->id(), 403);
+    public function destroy(Recipe $recipe)
+    {
+        $this->authorize('delete', $recipe);
 
-    $recipe->delete();
+        if ($recipe->image) {
+            Storage::disk('public')->delete($recipe->image);
+        }
 
-    return redirect()
-        ->route('recipes.index')
-        ->with('success', 'Recipe deleted successfully!');
-}
+        $recipe->delete();
+
+        return redirect()
+            ->route('recipes.index')
+            ->with('success', 'Recipe deleted successfully!');
+    }
 }

@@ -22,9 +22,9 @@ class CommentController extends Controller
         return back();
     }
 
-     public function destroy(Comment $comment)
+    public function destroy(Comment $comment)
     {
-        abort_unless($comment->user_id === auth()->id(), 403);
+        $this->authorize('delete', $comment);
 
         $comment->delete();
 
