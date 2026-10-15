@@ -22,14 +22,14 @@ recipes, and save their favourites.
 
 ## Tech Stack
 
-- **Backend:** PHP 8.3+, Laravel 13, Inertia Laravel 2, Ziggy
+- **Backend:** PHP 8.4+, Laravel 13, Inertia Laravel 2, Ziggy
 - **Frontend:** React 19, TypeScript, Inertia React 2, Tailwind CSS 4, Vite 8
 - **Testing:** Pest 5 (PHP), Vitest 5 + Testing Library (JS)
 - **Tooling:** Pint (PHP formatting), ESLint, Prettier
 
 ## Requirements
 
-- PHP 8.3 or newer with the `pdo_sqlite` extension
+- PHP 8.4 or newer with the `pdo_sqlite` extension
 - Composer
 - Node.js 22+ and npm
 
